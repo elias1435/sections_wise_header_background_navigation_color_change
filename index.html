@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Header Background Color on Scroll</title>
+<style>
+  /* CSS for the header */
+  header > #nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff; /* default background color */
+    transition: background-color 0.3s ease; /* smooth transition */
+    z-index: 1000; /* ensure it's above other content */
+  }
+  /* Define different background colors for different sections */
+  #section1 {
+    background-color: #ff0000; /* Red */
+    height: 100vh;
+  }
+  #section2 {
+    background-color: #00ff00; /* Green */
+    height: 100vh;
+  }
+  #section3 {
+    background-color: #0000ff; /* Blue */
+    height: 100vh;
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<header>
+  <!-- Your header content here -->
+  <nav id="nav-header">
+    <ul>
+      <li><a href="#section1">Section 1</a></li>
+      <li><a href="#section2">Section 2</a></li>
+      <li><a href="#section3">Section 3</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section id="section1">Section 1 Content</section>
+<section id="section2">Section 2 Content</section>
+<section id="section3">Section 3 Content</section>
+
+<script>
+  $(document).ready(function() {
+    $(window).on('scroll', function() {
+      const header = $('header > #nav-header');
+      const sections = $('section');
+
+      let currentSection = '';
+
+      sections.each(function() {
+        const sectionTop = $(this).offset().top;
+        const sectionHeight = $(this).outerHeight();
+        if ($(window).scrollTop() >= sectionTop - sectionHeight / 3) {
+          currentSection = $(this).attr('id');
+        }
+      });
+
+      header.css('background-color', getColorForSection(currentSection));
+      
+      // Add an additional class to #nav-header when scrolling to a specific section
+      sections.not('#' + currentSection).each(function() {
+        header.removeClass('additional-class-' + $(this).attr('id'));
+      });
+      header.addClass('additional-class-' + currentSection);
+    });
+
+    function getColorForSection(sectionId) {
+      switch(sectionId) {
+        case 'section1':
+          return '#ff0000'; // Red
+        case 'section2':
+          return '#00ff00'; // Green
+        case 'section3':
+          return '#0000ff'; // Blue
+        default:
+          return '#ffffff'; // Default color
+      }
+    }
+  });
+</script>
+</body>
+</html>
