@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change header color depnd on section while scrolling</title>
+
+<style>
+
+.dark-assets .logo img {
+    filter: brightness(1) invert(1) !important;
+}
+.dark-assets nav li a {
+    color: #000 !important;
+}    
+
+</style>
+
+</head>
+<body>
+
+<!-- header is sticky -->
+<header id="#nav-header">
+    <div class="logo"><img src="http://example.com/img/logo.png" alt="Logo"/></div>
+    <nav>
+        <ul>
+            <li><a href="http://example.com/home">Home</a></li>
+            <li><a href="http://example.com/about">About</a></li>
+            <li><a href="http://example.com/blog">Blog</a></li>
+            <li><a href="http://example.com/contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section id="section1" style="height: 100vh;">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos a quis amet eum sunt quidem et pariatur dignissimos porro aspernatur voluptates, provident eveniet numquam, consequuntur quaerat fuga impedit? Mollitia, sint?
+</section>
+
+<!-- this is white section so need to make menu font black -->
+<section id="section2" class="dark-assets" style="height: 100vh;">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos a quis amet eum sunt quidem et pariatur dignissimos porro aspernatur voluptates, provident eveniet numquam, consequuntur quaerat fuga impedit? Mollitia, sint?
+</section>
+<section id="section3" style="height: 100vh;">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos a quis amet eum sunt quidem et pariatur dignissimos porro aspernatur voluptates, provident eveniet numquam, consequuntur quaerat fuga impedit? Mollitia, sint?
+</section>
+<section id="section4" style="height: 100vh;">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos a quis amet eum sunt quidem et pariatur dignissimos porro aspernatur voluptates, provident eveniet numquam, consequuntur quaerat fuga impedit? Mollitia, sint?
+</section>
+
+
+<script>
+
+// Define colors for each section
+const sectionColors = {
+  section1: '#5600ff',
+  section2: '#30373f',
+  section3: '#58c358',
+  section4: '#5600ff'
+};
+
+// Default color for #nav-header
+const defaultColor = '#5600ff';
+const navHeader = document.querySelector('#nav-header');
+
+// Initialize #nav-header with the default color
+navHeader.style.backgroundColor = defaultColor;
+
+// Function to update the nav-header color based on section
+const updateNavHeaderColor = (sectionId, hasDarkAssetsClass) => {
+  navHeader.style.backgroundColor = sectionColors[sectionId] || defaultColor;
+  
+  // Add or remove 'dark-assets' class based on the section's class
+  if (hasDarkAssetsClass) {
+    navHeader.classList.add('dark-assets');
+  } else {
+    navHeader.classList.remove('dark-assets');
+  }
+};
+
+// Set up IntersectionObserver to monitor sections
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Check if the section has the 'dark-assets' class
+        const hasDarkAssetsClass = entry.target.classList.contains('dark-assets');
+        
+        // Update #nav-header color and class based on the section in view
+        updateNavHeaderColor(entry.target.id, hasDarkAssetsClass);
+      }
+    });
+  },
+  {
+    threshold: 0.9 // Trigger when 90% of the section is in view
+  }
+);
+
+// Observe each section
+Object.keys(sectionColors).forEach((sectionId) => {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    observer.observe(section);
+  }
+});
+
+
+</script>
+
+</body>
+</html>
